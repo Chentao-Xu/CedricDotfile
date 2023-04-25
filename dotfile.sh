@@ -1,5 +1,5 @@
 #!/bin/bash
-files="bashrc vimrc "
+files="bashrc vimrc zshrc"
 
 for file in $files; do
 	ln -s ~/dotfiles/"$file" ~/."$file"
