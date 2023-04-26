@@ -76,10 +76,6 @@ nnoremap <Right> :echoe "Use l"<CR>
 nnoremap <Up>    :echoe "Use k"<CR>
 nnoremap <Down>  :echoe "Use j"<CR>
 " ...and in insert mode
-inoremap <Left>  <ESC>:echoe "Use h"<CR>
-inoremap <Right> <ESC>:echoe "Use l"<CR>
-inoremap <Up>    <ESC>:echoe "Use k"<CR>
-inoremap <Down>  <ESC>:echoe "Use j"<CR>
 
 set runtimepath^=~/.vim/pack/vendor/start/ctrlp.vim
 
@@ -87,6 +83,7 @@ call plug#begin()
  Plug 'preservim/NERDTree' 
  Plug 'bling/vim-airline'
  Plug 'wikitopian/hardmode'  
+ Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 map <C-n> :NERDTreeToggle<CR>
