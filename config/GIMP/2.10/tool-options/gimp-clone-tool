@@ -1,0 +1,10 @@
+# GIMP gimp-clone-tool options
+
+(brush "Acrylic 01")
+(dynamics "Dynamics Off")
+(pattern "Pine")
+(palette "Color History")
+(brush-size 180)
+(brush-spacing 0.25)
+
+# end of gimp-clone-tool options

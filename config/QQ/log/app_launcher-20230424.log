@@ -1,0 +1,9 @@
+[4/24/2023, 5:40:34 PM][INFO] INSTALL_PKG_JSON_FILE_PATH is: /opt/QQ/resources/app/package.json
+[4/24/2023, 5:40:34 PM][INFO] REAL_INSTALL_PKG_JSON_PATH is: /opt/QQ/resources/app/package.json
+[4/24/2023, 5:40:34 PM][INFO] 启动主进程：../background.js
+{
+  "version": "3.1.0-9572",
+  "startTime": 1682329234812,
+  "endTime": 1682329234833,
+  "costTime": 21
+}

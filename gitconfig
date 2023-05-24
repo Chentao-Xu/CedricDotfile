@@ -1,0 +1,7 @@
+[credential]
+	helper = store
+[user]
+	email = ct.xu@outlook.com
+	name = cedric
+[core]
+	editor = vim
