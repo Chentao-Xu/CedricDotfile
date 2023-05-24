@@ -1,2 +1,2 @@
 # CedricDotfile
-    to manage my dotfile
+    to manage my dotfiles
