@@ -1,9 +1,0 @@
-# GIMP gimp-heal-tool options
-
-(brush "Acrylic 01")
-(dynamics "Dynamics Off")
-(palette "Color History")
-(brush-size 180)
-(brush-spacing 0.25)
-
-# end of gimp-heal-tool options
