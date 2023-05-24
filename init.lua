@@ -24,9 +24,10 @@ vim.keymap.set("n", "<Leader>v", "<C-w>v", opt)
 vim.keymap.set("n", "<Leader>s", "<C-w>s", opt)
 vim.keymap.set("n", "<Leader>[", "<C-o>", opt)
 vim.keymap.set("n", "<Leader>]", "<C-i>", opt)
-
--- nnoremap
-vim.api.nvim_set_keymap("n", "<C-n>", ":NvimTreeOpen<CR>", { noremap })
+-- Open NvimTree
+vim.api.nvim_set_keymap("n", "<leader>n", ":NvimTreeOpen<CR>", { noremap = true, silent = true })
+-- Close NvimTree
+vim.api.nvim_set_keymap("n", "<leader>m", ":NvimTreeClose<CR>", { noremap = true, silent = true })
 
 -- https://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
 -- vim.keymap.set("n", "j", [[v:count ? 'j' : 'gj']], { noremap = true, expr = true })
@@ -59,6 +60,43 @@ require("lazy").setup({
 	{
 		event = "VeryLazy",
 		"nvim-tree/nvim-tree.lua",
+	},
+	{
+		"xiyaowong/transparent.nvim",
+		config = function()
+			require("transparent").setup({
+				groups = { -- table: default groups
+					"Normal",
+					"NormalNC",
+					"Comment",
+					"Constant",
+					"Special",
+					"Identifier",
+					"Statement",
+					"PreProc",
+					"Type",
+					"Underlined",
+					"Todo",
+					"String",
+					"Function",
+					"Conditional",
+					"Repeat",
+					"Operator",
+					"Structure",
+					"LineNr",
+					"NonText",
+					"SignColumn",
+					"CursorLineNr",
+					"EndOfBuffer",
+				},
+				extra_groups = {
+					"GitSignsAdd",
+					"GitSignsDelete",
+					"GitSignsChange",
+				}, -- table: additional groups that should be cleared
+				exclude_groups = {}, -- table: groups you don't want to clear
+			})
+		end,
 	},
 	{
 		event = "VeryLazy",
@@ -260,9 +298,16 @@ require("lspconfig").pyright.setup({
 })
 
 -- set bakground transparent
+-- vim.cmd("autocmd VimEnter * TransparentEnable")
 -- vim.cmd("highlight Normal guibg=NONE ctermbg=NONE")
 -- vim.cmd("highlight NonText guibg=NONE ctermbg=NONE")
 -- vim.cmd("highlight LineNr guibg=NONE ctermbg=NONE")
+-- vim.cmd("highlight SignColumn guibg=NONE ctermbg=NONE")
+-- vim.cmd("highlight FloatBorder guibg=NONE ctermbg=NONE")
+-- 设置 gitsigns 的高亮组为透明背景
+-- vim.cmd("highlight link GitSignsAdd TransparentSign")
+-- vim.cmd("highlight link GitSignsChange TransparentSign")
+-- vim.cmd("highlight link GitSignsDelete TransparentSign")
 
 -- nvim-cmp
 local cmp = require("cmp")
@@ -409,7 +454,15 @@ require("lualine").setup({
 -- nvim-tree
 -- empty setup using defaults
 vim.opt.termguicolors = true
-require("nvim-tree").setup()
+require("nvim-tree").setup({})
+vim.api.nvim_create_autocmd("BufEnter", {
+	nested = true,
+	callback = function()
+		if #vim.api.nvim_list_wins() == 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
+			vim.cmd("quit")
+		end
+	end,
+})
 
 -- treesitter setup
 require("nvim-treesitter.configs").setup({
