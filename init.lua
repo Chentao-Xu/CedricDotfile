@@ -62,6 +62,24 @@ require("lazy").setup({
 		"nvim-tree/nvim-tree.lua",
 	},
 	{
+		event = "VeryLazy",
+		"mfussenegger/nvim-dap",
+	},
+	{
+		event = "VeryLazy",
+		"Mofiqul/vscode.nvim",
+	},
+	{
+		event = "VeryLazy",
+		"onsails/lspkind.nvim",
+	},
+
+	{
+		event = "VeryLazy",
+		"ray-x/lsp_signature.nvim",
+	},
+
+	{
 		"xiyaowong/transparent.nvim",
 		config = function()
 			require("transparent").setup({
@@ -93,6 +111,9 @@ require("lazy").setup({
 					"GitSignsAdd",
 					"GitSignsDelete",
 					"GitSignsChange",
+					"NvimtreeNormal",
+					-- "NormalFloat",
+					"FloatBorder",
 				}, -- table: additional groups that should be cleared
 				exclude_groups = {}, -- table: groups you don't want to clear
 			})
@@ -110,14 +131,14 @@ require("lazy").setup({
 		},
 		opt = true,
 	},
-	--	{
-	--		event = "VeryLazy",
-	--		"akinsho/bufferline.nvim",
-	--		version = "*",
-	--		dependencies = {
-	--			"nvim-tree/nvim-web-devicons",
-	--		},
-	--	},
+	{
+		event = "VeryLazy",
+		"akinsho/bufferline.nvim",
+		version = "*",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
+	},
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		event = "VeryLazy",
@@ -204,13 +225,46 @@ require("lazy").setup({
 })
 
 -- color scheme
-vim.cmd.colorscheme("base16-gruvbox-material-dark-medium")
+-- vim.cmd.colorscheme("base16-gruvbox-material-dark-medium")
+vim.o.background = "dark"
+local c = require("vscode.colors").get_colors()
+require("vscode").setup({
+	-- Alternatively set style in setup
+	-- style = 'light'
+
+	-- Enable transparent background
+	transparent = true,
+
+	-- Enable italic comment
+	italic_comments = true,
+
+	-- Disable nvim-tree background color
+	disable_nvimtree_bg = true,
+
+	-- Override colors (see ./lua/vscode/colors.lua)
+	color_overrides = {
+		vscLineNumber = "#FFFFFF",
+	},
+
+	-- Override highlight groups (see ./lua/vscode/theme.lua)
+	group_overrides = {
+		-- this supports the same val table as vim.api.nvim_set_hl
+		-- use colors from this colorscheme by requiring vscode.colors!
+		Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
+	},
+})
+require("vscode").load()
 
 -- lspconfig
-local lspconfig = require("lspconfig")
+-- local lspconfig = require("lspconfig")
 require("mason").setup()
 require("mason-lspconfig").setup()
 
+local signs = { Error = "✗ ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
@@ -288,7 +342,6 @@ require("lspconfig").lua_ls.setup({
 		},
 	},
 })
-
 require("lspconfig").clangd.setup({
 	capabilities = capabilities,
 })
@@ -303,7 +356,8 @@ require("lspconfig").pyright.setup({
 -- vim.cmd("highlight NonText guibg=NONE ctermbg=NONE")
 -- vim.cmd("highlight LineNr guibg=NONE ctermbg=NONE")
 -- vim.cmd("highlight SignColumn guibg=NONE ctermbg=NONE")
--- vim.cmd("highlight FloatBorder guibg=NONE ctermbg=NONE")
+vim.cmd("highlight NormalFloat guibg=#2e3440")
+-- vim.cmd("highlight FloatBorder guibg=NONE")
 -- 设置 gitsigns 的高亮组为透明背景
 -- vim.cmd("highlight link GitSignsAdd TransparentSign")
 -- vim.cmd("highlight link GitSignsChange TransparentSign")
@@ -322,7 +376,20 @@ local luasnip = require("luasnip")
 local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
+local lspkind = require("lspkind")
 cmp.setup({
+	formatting = {
+		format = lspkind.cmp_format({
+			mode = "symbol_text", -- show only symbol annotations
+			maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+			preset = "codicons",
+			before = function(entry, vim_item)
+				-- Source 显示提示来源
+				vim_item.menu = "[" .. string.upper(entry.source.name) .. "]"
+				return vim_item
+			end,
+		}),
+	},
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
 		expand = function(args)
@@ -402,7 +469,6 @@ cmp.setup.cmdline(":", {
 		{ name = "cmdline" },
 	}),
 })
-
 -- lua-line
 
 local function get_lsp_server()
@@ -415,7 +481,7 @@ end
 
 require("lualine").setup({
 	options = {
-		theme = "codedark",
+		theme = "vscode",
 		section_separators = { left = " ", right = " " },
 		component_separators = { left = "|", right = "|" },
 	},
@@ -435,21 +501,20 @@ require("lualine").setup({
 			{
 				"diagnostics",
 				sources = { "nvim_lsp" },
-				symbols = { error = " ", warn = " ", info = " ", hint = " " },
+				symbols = { error = "✗ ", warn = " ", info = " ", hint = " " },
 				always_visible = false,
 			},
 			-- "encoding",
 			-- "fileformat",
 			"filetype",
 		},
-		lualine_z = { "progress" },
+		lualine_y = { "progress" },
 		lualine_z = { "location" },
 	},
 })
 
 -- bufferline
--- vim.opt.termguicolors = true
--- require("bufferline").setup({})
+require("bufferline").setup({})
 
 -- nvim-tree
 -- empty setup using defaults
@@ -467,7 +532,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- treesitter setup
 require("nvim-treesitter.configs").setup({
 	-- A list of parser names, or "all" (the five listed parsers should always be installed)
-	ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "python" },
+	ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "python", "markdown" },
 
 	-- Install parsers synchronously (only applied to `ensure_installed`)
 	sync_install = false,
@@ -489,7 +554,7 @@ require("nvim-treesitter.configs").setup({
 		-- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
 		-- the name of the parser)
 		-- list of language that will be disabled
-		disable = { "c", "rust" },
+		-- disable = { "c", "rust" },
 		-- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
 		disable = function(lang, buf)
 			local max_filesize = 100 * 1024 -- 100 KB
@@ -506,3 +571,12 @@ require("nvim-treesitter.configs").setup({
 		additional_vim_regex_highlighting = false,
 	},
 })
+
+-- lsp-signature
+require("lsp_signature").setup({
+	handler_opts = {
+		border = "none",
+	},
+	doc_lines = 6,
+	hint_prefix = "🐊 ",
+}) -- no need to specify bufnr if you don't use toggle_key

@@ -1,0 +1,9 @@
+{
+    "workspace.library": [
+        "/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/",
+        "/home/cedric/lualib/share/lua/5.4",
+        "/home/cedric/lualib/lib/luarocks/rocks-5.4",
+        "/opt/homebrew/opt/openresty/lualib",
+        "/home/cedric/.local/share/nvim/mason/packages/lua-language-server/libexec/meta/65ebc2b4"
+    ]
+}
