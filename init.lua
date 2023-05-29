@@ -2,6 +2,9 @@ local set = vim.o
 set.number = true
 set.relativenumber = true
 set.clipboard = "unnamedplus"
+vim.cmd("set tabstop=4")
+vim.cmd("set shiftwidth=4")
+vim.cmd("set expandtab")
 
 -- highlight after copy
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
@@ -63,7 +66,15 @@ require("lazy").setup({
 	},
 	{
 		event = "VeryLazy",
+		"lukas-reineke/lsp-format.nvim",
+	},
+	{
+		event = "VeryLazy",
 		"mfussenegger/nvim-dap",
+	},
+	{
+		event = "VeryLazy",
+		"rcarriga/nvim-dap-ui",
 	},
 	{
 		event = "VeryLazy",
@@ -303,7 +314,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
+-- lsp-format
+
+require("lsp-format").setup()
+
 -- Set up lspconfig.
+
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("neodev").setup({
 	-- add any options here, or leave empty to use the default settings
@@ -311,6 +327,7 @@ require("neodev").setup({
 
 require("lspconfig").lua_ls.setup({
 	capabilities = capabilities,
+	on_attach = require("lsp-format").on_attach,
 	settings = {
 		Lua = {
 			runtime = {
@@ -342,12 +359,15 @@ require("lspconfig").lua_ls.setup({
 		},
 	},
 })
+
 require("lspconfig").clangd.setup({
 	capabilities = capabilities,
+	on_attach = require("lsp-format").on_attach,
 })
 
 require("lspconfig").pyright.setup({
 	capabilities = capabilities,
+	on_attach = require("lsp-format").on_attach,
 })
 
 -- set bakground transparent
@@ -489,6 +509,8 @@ require("lualine").setup({
 		lualine_a = { "mode" },
 		lualine_b = {
 			"branch",
+			"fileformat",
+			-- "encoding",
 			-- "diff",
 			-- { "diagnostics", sources = { "nvim_lsp" } },
 		},
@@ -504,7 +526,7 @@ require("lualine").setup({
 				symbols = { error = "✗ ", warn = " ", info = " ", hint = " " },
 				always_visible = false,
 			},
-			-- "encoding",
+			"encoding",
 			-- "fileformat",
 			"filetype",
 		},
@@ -577,6 +599,132 @@ require("lsp_signature").setup({
 	handler_opts = {
 		border = "none",
 	},
-	doc_lines = 6,
+	doc_lines = 5,
 	hint_prefix = "🐊 ",
 }) -- no need to specify bufnr if you don't use toggle_key
+
+-- nvim-dap setup
+local dap = require("dap")
+vim.keymap.set("n", "<F5>", function()
+	require("dap").continue()
+end)
+vim.keymap.set("n", "<F10>", function()
+	require("dap").step_over()
+end)
+vim.keymap.set("n", "<F11>", function()
+	require("dap").step_into()
+end)
+vim.keymap.set("n", "<F12>", function()
+	require("dap").step_out()
+end)
+vim.keymap.set("n", "<Leader>b", function()
+	require("dap").toggle_breakpoint()
+end)
+
+dap.adapters.cppdbg = {
+	id = "cppdbg",
+	type = "executable",
+	command = "/home/cedric/.local/share/nvim/mason/bin/OpenDebugAD7",
+}
+
+dap.configurations.cpp = {
+	{
+		name = "Launch file",
+		type = "cppdbg",
+		request = "launch",
+		program = function()
+			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+		end,
+
+		cwd = "${workspaceFolder}",
+		stopAtEntry = true,
+		setupCommands = {
+			{
+				text = "-enable-pretty-printing",
+				description = "enable pretty printing",
+				ignoreFailures = false,
+			},
+		},
+	},
+}
+dap.configurations.c = dap.configurations.cpp
+
+-- dat codicons
+
+local dap_breakpoint_color = {
+	breakpoint = {
+		ctermbg = 0,
+		fg = "#993939",
+		bg = "#31353f",
+	},
+	logpoing = {
+		ctermbg = 0,
+		fg = "#61afef",
+		bg = "#31353f",
+	},
+	stopped = {
+		ctermbg = 0,
+		fg = "#98c379",
+		bg = "#31353f",
+	},
+}
+
+vim.api.nvim_set_hl(0, "DapBreakpoint", dap_breakpoint_color.breakpoint)
+vim.api.nvim_set_hl(0, "DapLogPoint", dap_breakpoint_color.logpoing)
+vim.api.nvim_set_hl(0, "DapStopped", dap_breakpoint_color.stopped)
+
+local dap_breakpoint = {
+	error = {
+		text = "",
+		texthl = "DapBreakpoint",
+		linehl = "DapBreakpoint",
+		numhl = "DapBreakpoint",
+	},
+	condition = {
+		text = "ﳁ",
+		texthl = "DapBreakpoint",
+		linehl = "DapBreakpoint",
+		numhl = "DapBreakpoint",
+	},
+	rejected = {
+		text = "",
+		texthl = "DapBreakpint",
+		linehl = "DapBreakpoint",
+		numhl = "DapBreakpoint",
+	},
+	logpoint = {
+		text = "",
+		texthl = "DapLogPoint",
+		linehl = "DapLogPoint",
+		numhl = "DapLogPoint",
+	},
+	stopped = {
+		text = "",
+		texthl = "DapStopped",
+		linehl = "DapStopped",
+		numhl = "DapStopped",
+	},
+}
+
+vim.fn.sign_define("DapBreakpoint", dap_breakpoint.error)
+vim.fn.sign_define("DapBreakpointCondition", dap_breakpoint.condition)
+vim.fn.sign_define("DapBreakpointRejected", dap_breakpoint.rejected)
+vim.fn.sign_define("DapLogPoint", dap_breakpoint.logpoint)
+vim.fn.sign_define("DapStopped", dap_breakpoint.stopped)
+
+-- dap-ui setup
+
+local dapui = require("dapui")
+dapui.setup({})
+
+dap.listeners.after.event_initialized["dapui_config"] = function()
+	dapui.open({})
+end
+
+dap.listeners.before.event_terminated["dapui_config"] = function()
+	dapui.close({})
+end
+
+dap.listeners.before.event_exited["dapui_config"] = function()
+	dapui.close({})
+end

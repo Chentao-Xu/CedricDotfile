@@ -133,16 +133,16 @@ tmux_conf_theme_focused_pane_bg='#0087d7'               # light blue
 tmux_conf_theme_pane_border_style=thin
 
 # pane borders colours:
-tmux_conf_theme_pane_border=$nord0                   # gray
+tmux_conf_theme_pane_border=$nord3                   # gray
 tmux_conf_theme_pane_active_border=$nord10            # light blue
 
 # pane indicator colours (when you hit <prefix> + q)
 tmux_conf_theme_pane_indicator=$nord10                # light blue
 tmux_conf_theme_pane_active_indicator=$nord10         # light blue
 
-# status line style
-tmux_conf_theme_message_fg=$nord0                    
-tmux_conf_theme_message_bg=$nord13
+# status line message style
+tmux_conf_theme_message_fg=$nord6                   
+tmux_conf_theme_message_bg=$nord12
 tmux_conf_theme_message_attr="bold"
 
 # status line command style (<prefix> : Escape)
@@ -157,7 +157,7 @@ tmux_conf_theme_mode_attr="bold"
 
 # status line style
 tmux_conf_theme_status_fg=$nord3                  # light gray
-tmux_conf_theme_status_bg=$nord3                     # dark gray
+tmux_conf_theme_status_bg=$nord3                  # dark gray
 tmux_conf_theme_status_attr="none"
 
 # terminal title
@@ -183,11 +183,11 @@ tmux_conf_theme_terminal_title="#h ❐ #S ● #I #W"
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_window_status_fg=$nord5             
-tmux_conf_theme_window_status_bg=$nord1              
+tmux_conf_theme_window_status_bg=$nord9              
 tmux_conf_theme_window_status_attr="none"
-tmux_conf_theme_window_status_format="#I #W"
+tmux_conf_theme_window_status_format=" #I #W "
 #tmux_conf_theme_window_status_format="#{circled_window_index} #W"
-#tmux_conf_theme_window_status_format="#I #W#{?window_bell_flag,🔔,}#{?window_zoomed_flag,🔍,}"
+#tmux_conf_theme_window_status_format=" #I #W#{?window_bell_flag,🔔,}#{?window_zoomed_flag,🔍,}"
 
 # window current status style
 #   - built-in variables are:
@@ -203,7 +203,7 @@ tmux_conf_theme_window_status_format="#I #W"
 tmux_conf_theme_window_status_current_fg=$nord6      
 tmux_conf_theme_window_status_current_bg=$nord10 
 tmux_conf_theme_window_status_current_attr="bold"
-tmux_conf_theme_window_status_current_format=" #W"
+tmux_conf_theme_window_status_current_format="🤔 #W"
 #tmux_conf_theme_window_status_current_format="#{circled_window_index} #W"
 #tmux_conf_theme_window_status_current_format="#I #W#{?window_zoomed_flag,🔍,}"
 
@@ -261,26 +261,27 @@ tmux_conf_theme_right_separator_sub='|'  #   PowerlineSymbols.otf font, see READ
 #     - #{uptime_s}
 #     - #{username}
 #     - #{username_ssh}
-tmux_conf_theme_status_left="   #S "
+tmux_conf_theme_status_left=" 🐊 #S"
 #tmux_conf_theme_status_right="#{prefix}#{mouse}#{pairing}#{synchronized}#{?battery_status,#{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} "
-tmux_conf_theme_status_right='#{prefix}#{pairing}#{synchronized}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},}#{?battery_status,#{battery_status},} | %b %d | #{username}#{root} |﯅ #{hostname} '
+tmux_conf_theme_status_right='#{prefix}#{pairing}#{synchronized}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},}#{?battery_status,#{battery_status},} | %d %b | #{username}#{root} |﯅ #{hostname} '
+
 # status left style
 tmux_conf_theme_status_left_fg=$nord5 # '#e4e4e4,#e4e4e4,#e4e4e4'  # black, white , white
-tmux_conf_theme_status_left_bg=$nord12 #',#00afff'  # yellow, pink, white blue
+tmux_conf_theme_status_left_bg=$nord1 #',#00afff'  # yellow, pink, white blue
 tmux_conf_theme_status_left_attr='bold,none,none'
 
 # status right style
 #tmux_conf_theme_status_right_fg="$tmux_conf_theme_colour_12,$tmux_conf_theme_colour_13,$tmux_conf_theme_colour_14"
 #tmux_conf_theme_status_right_bg="$tmux_conf_theme_colour_15,$tmux_conf_theme_colour_16,$tmux_conf_theme_colour_17"
-tmux_conf_theme_status_right_fg=$nord4,$nord5,$nord3,$nord5
-tmux_conf_theme_status_right_bg=$nord1,$nord7,$nord13,$nord12 # dark gray, red, white
+tmux_conf_theme_status_right_fg=$nord4,$nord5,$nord5,$nord5
+tmux_conf_theme_status_right_bg=$nord3,$nord7,$nord9,$nord10 # dark gray, red, white
 tmux_conf_theme_status_right_attr='bold,none,bold,none,none,none'
 
 
 # pairing indicator
 tmux_conf_theme_pairing="⚇"                 # U+2687
 tmux_conf_theme_pairing_fg=$nord13
-tmux_conf_theme_pairing_bg=$nord1
+tmux_conf_theme_pairing_bg=$nord3
 tmux_conf_theme_pairing_attr="none"
 
 # prefix indicator
@@ -342,8 +343,8 @@ tmux_conf_battery_vbar_palette="gradient"
 # symbols used to indicate whether battery is charging or discharging
 #tmux_conf_battery_status_charging="↑"       # U+2191
 #tmux_conf_battery_status_discharging="↓"    # U+2193
-tmux_conf_battery_status_charging='🔌'    # U+26A1
-tmux_conf_battery_status_discharging="🔋"  # U+1F50B
+tmux_conf_battery_status_charging=' ⚡'    # U+26A1
+tmux_conf_battery_status_discharging=" 🔋"  # U+1F50B
 
 # clock style (when you hit <prefix> + t)
 # you may want to use %I:%M %p in place of %R in tmux_conf_theme_status_right
