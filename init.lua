@@ -66,10 +66,6 @@ require("lazy").setup({
 	},
 	{
 		event = "VeryLazy",
-		"lukas-reineke/lsp-format.nvim",
-	},
-	{
-		event = "VeryLazy",
 		"mfussenegger/nvim-dap",
 	},
 	{
@@ -160,6 +156,7 @@ require("lazy").setup({
 				sources = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.black,
+					-- null_ls.builtins.formatting.clang_format,
 				},
 				on_attach = function(client, bufnr)
 					if client.supports_method("textDocument/formatting") then
@@ -314,10 +311,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- lsp-format
-
-require("lsp-format").setup()
-
 -- Set up lspconfig.
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -327,7 +320,6 @@ require("neodev").setup({
 
 require("lspconfig").lua_ls.setup({
 	capabilities = capabilities,
-	on_attach = require("lsp-format").on_attach,
 	settings = {
 		Lua = {
 			runtime = {
@@ -362,12 +354,10 @@ require("lspconfig").lua_ls.setup({
 
 require("lspconfig").clangd.setup({
 	capabilities = capabilities,
-	on_attach = require("lsp-format").on_attach,
 })
 
 require("lspconfig").pyright.setup({
 	capabilities = capabilities,
-	on_attach = require("lsp-format").on_attach,
 })
 
 -- set bakground transparent
@@ -564,7 +554,7 @@ require("nvim-treesitter.configs").setup({
 	auto_install = true,
 
 	-- List of parsers to ignore installing (for "all")
-	ignore_install = { "javascript" },
+	-- ignore_install = { "javascript" },
 
 	---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
 	-- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
@@ -578,7 +568,7 @@ require("nvim-treesitter.configs").setup({
 		-- list of language that will be disabled
 		-- disable = { "c", "rust" },
 		-- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-		disable = function(lang, buf)
+		disable = function(_, buf)
 			local max_filesize = 100 * 1024 -- 100 KB
 			local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
 			if ok and stats and stats.size > max_filesize then
