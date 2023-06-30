@@ -5,6 +5,7 @@ set.clipboard = "unnamedplus"
 vim.cmd("set tabstop=4")
 vim.cmd("set shiftwidth=4")
 vim.cmd("set expandtab")
+-- set.pumblend = 15
 
 -- highlight after copy
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
@@ -119,7 +120,7 @@ require("lazy").setup({
 					"GitSignsDelete",
 					"GitSignsChange",
 					"NvimtreeNormal",
-					-- "NormalFloat",
+					--	"NormalFloat",
 					"FloatBorder",
 				}, -- table: additional groups that should be cleared
 				exclude_groups = {}, -- table: groups you don't want to clear
@@ -198,6 +199,7 @@ require("lazy").setup({
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
+			"hrsh7th/cmp-look",
 			"hrsh7th/nvim-cmp",
 			"L3MON4D3/LuaSnip",
 		},
@@ -366,8 +368,8 @@ require("lspconfig").pyright.setup({
 -- vim.cmd("highlight NonText guibg=NONE ctermbg=NONE")
 -- vim.cmd("highlight LineNr guibg=NONE ctermbg=NONE")
 -- vim.cmd("highlight SignColumn guibg=NONE ctermbg=NONE")
-vim.cmd("highlight NormalFloat guibg=#2e3440")
--- vim.cmd("highlight FloatBorder guibg=NONE")
+-- vim.cmd("highlight NormalFloat guibg=#5e81ac")
+-- vim.cmd("highlight FloatBorder guibg=#5e81ac")
 -- 设置 gitsigns 的高亮组为透明背景
 -- vim.cmd("highlight link GitSignsAdd TransparentSign")
 -- vim.cmd("highlight link GitSignsChange TransparentSign")
@@ -443,13 +445,14 @@ cmp.setup({
 		["<C-e>"] = cmp.mapping.abort(),
 		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
+
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
 		{ name = "luasnip" }, -- For luasnip users.
 		-- { name = 'ultisnips' }, -- For ultisnips users.
 		-- { name = 'snippy' }, -- For snippy users.
-	}, {
 		{ name = "buffer" },
+		{ name = "look" },
 	}),
 })
 
