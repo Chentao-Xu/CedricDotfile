@@ -108,6 +108,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ll="ls -l"
 alias tnew="tmux new -s"
+alias code="/mnt/d/Software/Microsoft\ VS\ Code/bin/code"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -155,4 +156,39 @@ pastefinish() {
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/cedric/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/cedric/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/cedric/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/cedric/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+#
+# add for proxy
+export hostip=$(ip route | grep default | awk '{print $3}')
+export hostport=10809
+alias proxy='
+    export HTTPS_PROXY="http://${hostip}:${hostport}";
+    export HTTP_PROXY="http://${hostip}:${hostport}";
+    export ALL_PROXY="http://${hostip}:${hostport}";
+    echo -e "Acquire::http::Proxy \"http://${hostip}:${hostport}\";" | sudo tee -a /etc/apt/apt.conf.d/proxy.conf > /dev/null;
+    echo -e "Acquire::https::Proxy \"http://${hostip}:${hostport}\";" | sudo tee -a /etc/apt/apt.conf.d/proxy.conf > /dev/null;
+'
+alias unproxy='
+    unset HTTPS_PROXY;
+    unset HTTP_PROXY;
+    unset ALL_PROXY;
+    sudo sed -i -e '/Acquire::http::Proxy/d' /etc/apt/apt.conf.d/proxy.conf;
+    sudo sed -i -e '/Acquire::https::Proxy/d' /etc/apt/apt.conf.d/proxy.conf;
+'

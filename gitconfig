@@ -4,4 +4,6 @@
 	email = ct.xu@outlook.com
 	name = cedric
 [core]
-	editor = vim
+	editor = nvim
+[proxy]
+	https = socks5://172.28.96.1:10810
